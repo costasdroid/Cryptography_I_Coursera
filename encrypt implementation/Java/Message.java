@@ -1,6 +1,7 @@
-
+//The class Message represents every message in every format
 public class Message {
 	
+	//either pt, hexed pt, or byted pt
 	private String msg;
 	private String hexed;
 	private byte[] byted;
@@ -8,64 +9,64 @@ public class Message {
 	public Message() {
 		
 	}
-	
+
+	//you can construct either with pt
 	public Message(String a) {
-		msg = a;
-		hexed = stringToHex(a);
-		byted = hexToBytes(hexed);
+		setMsg(a);
 	}
 	
-	public String getMsg() {
+	//or with byte[] format
+	public Message(byte[] b) {
+		byted = b;
+		bytesToHex();
+		msg = new String(byted);
+	}
+	
+	public String toText() {
 		return msg;
 	}
 
+	//it could have been a constructor but there would be messed with hexed format
 	public void setMsg(String msg) {
 		this.msg = msg;
-		hexed = stringToHex(msg);
-		byted = hexToBytes(hexed);
+		byted = msg.getBytes();
+		bytesToHex();
 	}
 
-	public String getHexed() {
+	public String toHex() {
 		return hexed;
 	}
 
+	//construct hexed
 	public void setHexed(String hexed) {
 		this.hexed = hexed;
-		msg = hexToString(hexed);
-		byted = hexToBytes(hexed);
+		hexToBytes();
+		msg = new String(byted);
 	}
 
-	public byte[] getByted() {
-		return byted;
-	}
-
-	public void setByted(byte[] byted) {
-		this.byted = byted;
-	}
-	
-
-	private byte[] hexToBytes(String a) {
+	//convert hex to bytes
+	private void hexToBytes() {
 		
-		byte[] b = new byte[a.length() / 2];
+		byted = new byte[hexed.length() / 2];
 		
-		for (int i = 0; i < b.length; i++) {
-			b[i] = (byte) Integer.parseInt(a.substring(2 * i, 2 * i + 2), 16);
+		for (int i = 0; i < byted.length; i++) {
+			byted[i] = (byte) Integer.parseInt(hexed.substring(2 * i, 2 * i + 2), 16);
 		}
-		
-		return b;
+
 	}
 	
-	private String bytesToHex(byte[] b) {
+	//convert bytes to hex
+	private void bytesToHex() {
 		
-		String res = "";
+		hexed = "";
 		
-		for (int i = 0; i < b.length; i++) {
-			res = res + ((b[i] & 0xff) < 16 ? "0" : "") + Integer.toHexString(b[i] & 0xff);
+		for (int i = 0; i < byted.length; i++) {
+			hexed = hexed + ((byted[i] & 0xff) < 16 ? "0" : "") + Integer.toHexString(byted[i] & 0xff);
 		}
-		
-		return res;
+
 	}
 	
+	//create a cipher Message with key b
 	public Message encryptWith(Message b) {
 		
 		expand(b);
@@ -80,24 +81,18 @@ public class Message {
 		for (int i = 0; i < min; i++) {
 			c[i] = (byte) (b1[i] ^ b2[i]);
 		}
-		Message res = new Message();
-		res.setHexed(bytesToHex(c));
+		
+		Message res = new Message(c);
+		
 		return res;
 	}
-	
-	private String hexToString(String a) {
-		return new String(hexToBytes(a));
-	}
-	
-	private String stringToHex(String a) {
-		return bytesToHex(a.getBytes());
-	}
-	
+
+	//if the key is "small" compared to message expand it
 	public void expand(Message a) {
 		
 		String s = "";
 		
-		String temp = a.getMsg();
+		String temp = a.toText();
 		
 		for(int i = 0; i <= (msg.length() / temp.length()) + 1; i++) {
 			s = s + temp;

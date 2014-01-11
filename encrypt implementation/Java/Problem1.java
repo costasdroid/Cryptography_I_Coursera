@@ -37,7 +37,7 @@ public class Problem1 {
 		//This is the message you want to encrypt
 		Message message = new Message("Write here the message you want to send");
 		
-		System.out.println("You must send: " + message.encryptWith(key).getHexed());
+		System.out.println("You must send: " + message.encryptWith(key).toHex());
 		
 	}
 

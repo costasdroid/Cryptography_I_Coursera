@@ -1,4 +1,18 @@
 //The class Message represents every message in every format
+/*
+Every message is represented either in
+- ascii characters
+- hexed message
+- byte[] array
+so yoy can construct it either with message(ascii) or message(byte[]) or even with any of the 3 seeters each for the proper format
+
+the 2 public methods are for encryption
+
+The encryptWith, xors the class instance with another
+The expand, expands the text to have the same length with the current instance
+*/
+
+
 public class Message {
 	
 	//either pt, hexed pt, or byted pt

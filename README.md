@@ -11,3 +11,10 @@ While implementing encryption, I found out that there was a problem in Java with
 The result now is, given a pt (plain text) and a key, it outputs the ct (cipher text).
 
 The next one, will solve the excercise!
+
+#Week 3
+Split a file into 1024Bytes blocks (except the last one). Consume the file as:
+
+Hash the last block
+Hash the previous block concatenated with the last hash key again and again until you reach the beginning
+Output the last hash key
